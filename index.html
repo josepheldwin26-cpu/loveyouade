@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Spesial Buat Kamu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #1a0508; 
+            --bg-glow: #4a0d18;
+            --env-color: #9e1b27; 
+            --env-dark: #7a121d;
+            --env-flap: #c92a39;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--bg-glow), var(--bg-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; 
+        }
+
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 100, 130, 0.15);
+            bottom: -50px;
+            animation: floatUp linear infinite;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(1px);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg) scale(1.5); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10; 
+        }
+
+        .container:not(.open):hover {
+            transform: scale(1.03) translateY(-5px);
+        }
+
+        .envelope {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background-color: var(--env-color);
+            border-radius: 10px 10px 15px 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 120px solid var(--env-flap);
+            transform-origin: top;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 4;
+        }
+
+        .front {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid var(--env-dark);
+            border-right: 160px solid var(--env-dark);
+            border-bottom: 110px solid var(--env-color);
+            border-radius: 0 0 15px 15px;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .seal {
+            position: absolute;
+            top: 115px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 25px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 6; 
+            animation: pulseHeart 1.5s infinite;
+            transition: opacity 0.4s ease;
+        }
+
+        @keyframes pulseHeart {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px rgba(231, 76, 60, 0.4); }
+            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 25px rgba(255, 100, 100, 0.8); }
+        }
+
+        .letter {
+            position: absolute;
+            background: #ffffff; 
+            width: 280px;
+            height: 380px; 
+            top: 10px;
+            left: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-delay: 0.5s;
+            z-index: 2;
+            padding: 35px 25px;
+            box-sizing: border-box;
+            text-align: center;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .letter h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 40px;
+            color: #9e1b27; 
+            margin: 0 0 15px 0;
+            letter-spacing: 1px;
+        }
+
+        .letter p {
+            font-size: 15px;
+            color: #333333; 
+            line-height: 1.7;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .hint {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffcccc;
+            font-size: 14px;
+            opacity: 0.9;
+            letter-spacing: 2px;
+            animation: bounce 2s infinite;
+            text-transform: uppercase;
+            font-weight: 600;
+            width: max-content;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-8px); }
+            60% { transform: translateX(-50%) translateY(-4px); }
+        }
+
+        .scatter-photo {
+            position: absolute;
+            width: 120px; 
+            height: 120px;
+            object-fit: cover; 
+            border: 5px solid #fff;
+            border-bottom: 20px solid #fff; 
+            border-radius: 4px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 1s, left 1s cubic-bezier(0.2, 0.8, 0.2, 1), top 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s ease, box-shadow 0.4s ease;
+            z-index: 1; 
+            pointer-events: none; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+        }
+
+        .scatter-photo.spread {
+            opacity: 1;
+            pointer-events: auto; 
+            cursor: pointer;
+            transform: translate(-50%, -50%) scale(1) rotate(var(--rot));
+        }
+
+        .scatter-photo.spread:hover {
+            z-index: 100 !important;
+            transform: translate(-50%, -50%) scale(1.6) rotate(0deg) !important;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            border-bottom: 5px solid #fff; 
+        }
+
+        .container.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .container.open .seal {
+            opacity: 0;
+        }
+
+        .container.open .letter {
+            transform: translateY(-150px) scale(1.1);
+            z-index: 5;
+            opacity: 1;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+        }
+
+        .container.open .hint {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* --- MODAL --- */
+        .photo-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .photo-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 15px 15px 30px 15px;
+            border-radius: 8px;
+            max-width: 85vw;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: scale(0.8) translateY(50px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            cursor: default;
+        }
+
+        .photo-modal.show .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        #modalImg {
+            max-width: 100%;
+            max-height: 50vh;
+            object-fit: contain;
+            border-radius: 4px;
+            pointer-events: none; 
+        }
+
+        #modalText {
+            font-family: 'Dancing Script', cursive;
+            color: #9e1b27;
+            font-size: 32px;
+            margin: 25px 0 0 0;
+            text-align: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .close-hint {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        /* --- KODE RESPONSIVE UNTUK HP & TABLET --- */
+        @media (max-width: 768px) {
+            .container {
+                transform: scale(0.8); /* Ngecilin amplop biar muat di layar HP */
+            }
+            .container:not(.open):hover {
+                transform: scale(0.83) translateY(-5px);
+            }
+            .scatter-photo {
+                width: 75px; /* Foto dikecilin buat HP */
+                height: 75px;
+                border-width: 3px;
+                border-bottom-width: 12px;
+            }
+            .scatter-photo.spread:hover {
+                transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
+            }
+            .container.open .letter {
+                transform: translateY(-130px) scale(1.05); /* Surat naiknya disesuaikan */
+            }
+            #modalText {
+                font-size: 24px;
+                margin-top: 15px;
+            }
+            .close-hint {
+                font-size: 12px;
+                top: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="if_i_had_a_gun.mp3" preload="auto"></audio>
+
+    <div class="container" id="mailContainer">
+        <div class="envelope">
+            <div class="flap"></div>
+            <div class="front"></div>
+            <div class="seal">❤️</div>
+            
+            <div class="letter">
+                <h1>Happy Birthday ❤️</h1>
+                <p>Mungkin cuma lewat ini aku bisa nyampeinnya. Semoga hari-harimu selalu diisi hal baik. Terima kasih udah jadi versi terbaik dari dirimu. I'm wishing you the happiest birthday!</p>
+            </div>
+        </div>
+        <div class="hint">Tap untuk membuka</div>
+    </div>
+
+    <img src="foto1.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto2.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto3.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto4.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto5.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto6.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto7.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto8.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto9.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto10.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto11.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto12.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto13.jpg" class="scatter-photo" alt="Foto">
+    <img src="foto14.jpg" class="scatter-photo" alt="Foto">
+
+    <div class="photo-modal" id="photoModal">
+        <div class="close-hint">Ketuk di mana saja untuk menutup ✖</div>
+        <div class="modal-content">
+            <img src="" id="modalImg" alt="Kenangan">
+            <p id="modalText"></p>
+        </div>
+    </div>
+
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.classList.add('bg-heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 5 + 6) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }
+        setInterval(createHeart, 300);
+
+        const container = document.getElementById('mailContainer');
+        const music = document.getElementById('bgMusic');
+        const photos = document.querySelectorAll('.scatter-photo');
+        let isOpen = false;
+
+        const modal = document.getElementById('photoModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalText = document.getElementById('modalText');
+
+        const pesanRomantis = [
+            "Tawa kamu itu candu, bikin aku pengen denger terus tiap hari.",
+            "Kalau waktu bisa di-pause, aku pengen berhentiin pas lagi sama kamu.",
+            "Momen sederhana jadi luar biasa kalau dihabiskan bareng kamu.",
+            "Kamu itu definisi 'rumah' buat aku, tempat pulangnya hati.",
+            "Dunia kerasa lebih baik sejak ada kamu di dalamnya.",
+            "Nggak perlu yang sempurna, cukup kamu aja udah lebih dari cukup.",
+            "Setiap liat foto ini, aku selalu bersyukur bisa kenal kamu.",
+            "Kamu itu alasan di balik senyum-senyum sendiriku akhir-akhir ini.",
+            "Tetap jadi diri kamu sendiri ya, karena itu yang bikin aku sayang.",
+            "Mata kamu selalu berhasil bikin aku jatuh cinta lagi dan lagi.",
+            "Bersama kamu, hari yang mendung pun kerasa cerah ceria.",
+            "Terima kasih udah selalu ada, jadi pendengar dan penyemangatku.",
+            "Satu dari sekian banyak hal yang aku syukuri adalah kehadiranmu.",
+            "I love you, lebih dari kata-kata yang bisa aku ucapin."
+        ];
+
+        // Cek ukuran layar buat nentuin posisi foto
+        const isMobile = window.innerWidth <= 768;
+        let photoSlots = [];
+
+        if (isMobile) {
+            // Posisi khusus HP (Numpuk di atas dan bawah, ngosongin tengah buat amplop)
+            photoSlots = [
+                { left: '20vw', top: '12vh' }, { left: '50vw', top: '8vh' }, { left: '80vw', top: '12vh' },
+                { left: '15vw', top: '24vh' }, { left: '85vw', top: '24vh' },
+                { left: '20vw', top: '88vh' }, { left: '50vw', top: '92vh' }, { left: '80vw', top: '88vh' },
+                { left: '15vw', top: '76vh' }, { left: '85vw', top: '76vh' },
+                { left: '10vw', top: '35vh' }, { left: '90vw', top: '35vh' }, // Nyelip di pinggir kiri kanan
+                { left: '10vw', top: '65vh' }, { left: '90vw', top: '65vh' }
+            ];
+        } else {
+            // Posisi PC (Lebar)
+            photoSlots = [
+                { left: '16vw', top: '26vh' }, { left: '12vw',  top: '50vh' }, { left: '16vw', top: '74vh' },
+                { left: '84vw', top: '26vh' }, { left: '88vw', top: '50vh' }, { left: '84vw', top: '74vh' },
+                { left: '28vw', top: '22vh' }, { left: '38vw', top: '18vh' }, { left: '62vw', top: '18vh' }, { left: '72vw', top: '22vh' },
+                { left: '28vw', top: '78vh' }, { left: '38vw', top: '82vh' }, { left: '62vw', top: '82vh' }, { left: '72vw', top: '78vh' }
+            ];
+        }
+
+        container.addEventListener('click', () => {
+            if (!isOpen) {
+                container.classList.add('open');
+                isOpen = true;
+                
+                music.play().then(() => {
+                    music.currentTime = 78; 
+                }).catch(error => {
+                    console.log("Audio Error: ", error);
+                    document.body.addEventListener('click', () => {
+                        music.play();
+                        music.currentTime = 78;
+                    }, { once: true });
+                });
+                
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 200,
+                        spread: 90,
+                        origin: { y: 0.6 },
+                        colors: ['#ff4d4d', '#ff7eb3', '#ffffff', '#c0392b'],
+                        shapes: ['circle', 'square'] 
+                    });
+                }, 900);
+
+                photos.forEach((photo, index) => {
+                    if(index < photoSlots.length) {
+                        const slot = photoSlots[index];
+                        const randomRotate = (Math.random() - 0.5) * 40;
+
+                        setTimeout(() => {
+                            photo.style.left = slot.left;
+                            photo.style.top = slot.top;
+                            photo.style.setProperty('--rot', `${randomRotate}deg`);
+                            photo.classList.add('spread');
+                        }, 200 + (index * 90)); 
+                    }
+
+                    photo.addEventListener('click', (e) => {
+                        e.stopPropagation(); 
+                        if (photo.classList.contains('spread')) {
+                            modalImg.src = photo.src;
+                            modalText.innerText = pesanRomantis[index];
+                            modal.classList.add('show');
+                        }
+                    });
+                });
+            }
+        });
+
+        modal.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
