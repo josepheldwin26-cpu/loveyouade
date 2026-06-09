@@ -115,19 +115,20 @@
             50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 25px rgba(255, 100, 100, 0.8); }
         }
 
+        /* Surat Putih Solid dengan penyesuaian ukuran */
         .letter {
             position: absolute;
             background: #ffffff; 
-            width: 280px;
-            height: 380px; 
-            top: 10px;
-            left: 20px;
+            width: 290px;
+            height: 400px; /* Ditinggikan sedikit biar teksnya muat */
+            top: -10px;
+            left: 15px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
             transition-delay: 0.5s;
             z-index: 2;
-            padding: 35px 25px;
+            padding: 30px 20px;
             box-sizing: border-box;
             text-align: center;
             opacity: 0;
@@ -138,16 +139,17 @@
 
         .letter h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 40px;
+            font-size: 32px; /* Ukuran font disesuaikan */
             color: #9e1b27; 
-            margin: 0 0 15px 0;
+            margin: 0 0 12px 0;
             letter-spacing: 1px;
+            line-height: 1.2;
         }
 
         .letter p {
-            font-size: 15px;
+            font-size: 13px; /* Ukuran font disesuaikan untuk teks panjang */
             color: #333333; 
-            line-height: 1.7;
+            line-height: 1.6;
             margin: 0;
             font-weight: 500;
         }
@@ -215,7 +217,7 @@
         }
 
         .container.open .letter {
-            transform: translateY(-150px) scale(1.1);
+            transform: translateY(-160px) scale(1.1);
             z-index: 5;
             opacity: 1;
             box-shadow: 0 25px 60px rgba(0,0,0,0.7);
@@ -226,7 +228,7 @@
             transition: opacity 0.3s;
         }
 
-        /* --- MODAL --- */
+        /* --- MODAL YANG SUDAH DIPERBAIKI --- */
         .photo-modal {
             position: fixed;
             top: 0;
@@ -253,10 +255,10 @@
 
         .modal-content {
             background: #fff;
-            padding: 15px 15px 30px 15px;
+            padding: 15px 15px 25px 15px;
             border-radius: 8px;
-            max-width: 85vw;
-            max-height: 85vh;
+            width: min-content; 
+            max-width: 90vw;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -271,20 +273,26 @@
         }
 
         #modalImg {
-            max-width: 100%;
-            max-height: 50vh;
-            object-fit: contain;
+            max-height: 55vh; 
+            max-width: 85vw; 
+            width: auto; 
+            height: auto;
             border-radius: 4px;
             pointer-events: none; 
+            display: block;
         }
 
         #modalText {
             font-family: 'Dancing Script', cursive;
             color: #9e1b27;
-            font-size: 32px;
-            margin: 25px 0 0 0;
+            font-size: 28px;
+            line-height: 1.3;
+            margin: 20px 0 0 0;
             text-align: center;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            width: 100%; 
+            min-width: 250px; 
+            word-wrap: break-word;
         }
 
         .close-hint {
@@ -296,16 +304,16 @@
             letter-spacing: 1px;
         }
 
-        /* --- KODE RESPONSIVE UNTUK HP & TABLET --- */
+        /* --- RESPONSIVE UNTUK HP & TABLET --- */
         @media (max-width: 768px) {
             .container {
-                transform: scale(0.8); /* Ngecilin amplop biar muat di layar HP */
+                transform: scale(0.8); 
             }
             .container:not(.open):hover {
                 transform: scale(0.83) translateY(-5px);
             }
             .scatter-photo {
-                width: 75px; /* Foto dikecilin buat HP */
+                width: 75px; 
                 height: 75px;
                 border-width: 3px;
                 border-bottom-width: 12px;
@@ -314,7 +322,7 @@
                 transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
             }
             .container.open .letter {
-                transform: translateY(-130px) scale(1.05); /* Surat naiknya disesuaikan */
+                transform: translateY(-130px) scale(1.05); 
             }
             #modalText {
                 font-size: 24px;
@@ -339,13 +347,16 @@
             <div class="seal">❤️</div>
             
             <div class="letter">
-                <h1>Happy Birthday ❤️</h1>
-                <p>Mungkin cuma lewat ini aku bisa nyampeinnya. Semoga hari-harimu selalu diisi hal baik. Terima kasih udah jadi versi terbaik dari dirimu. I'm wishing you the happiest birthday!</p>
+                <!-- Teks utama yang sudah diperbaiki tanda bacanya -->
+                <h1>Happy Birthday, Sayang ❤️</h1>
+                <p>Cieeee, ada yang sudah umur 20 niii. Semoga semakin dewasa, semakin jadi orang baik, dan bikin bangga orang tua. Nanti ke depannya pasti makin banyak tantangan, tapi sa yakinnn ade bisaaaa, karena sa tau ade itu cewek kuat. Saya bangga jadi ade punya pacar. Selamat merayakan ini hari spesial adeee! Maaf belum bisa kasi surprise langsung untuk ade, tapi nanti nyusul. Selamat ulang tahun sayang, love you so muchhhhhhh ❤️❤️❤️</p>
+                <p style="margin-top: 15px; font-weight: 600; font-style: italic; font-size: 14px;">- Your handsome boyfriend</p>
             </div>
         </div>
         <div class="hint">Tap untuk membuka</div>
     </div>
 
+    <!-- 14 Foto -->
     <img src="foto1.jpg" class="scatter-photo" alt="Foto">
     <img src="foto2.jpg" class="scatter-photo" alt="Foto">
     <img src="foto3.jpg" class="scatter-photo" alt="Foto">
@@ -408,22 +419,19 @@
             "I love you, lebih dari kata-kata yang bisa aku ucapin."
         ];
 
-        // Cek ukuran layar buat nentuin posisi foto
         const isMobile = window.innerWidth <= 768;
         let photoSlots = [];
 
         if (isMobile) {
-            // Posisi khusus HP (Numpuk di atas dan bawah, ngosongin tengah buat amplop)
             photoSlots = [
                 { left: '20vw', top: '12vh' }, { left: '50vw', top: '8vh' }, { left: '80vw', top: '12vh' },
                 { left: '15vw', top: '24vh' }, { left: '85vw', top: '24vh' },
                 { left: '20vw', top: '88vh' }, { left: '50vw', top: '92vh' }, { left: '80vw', top: '88vh' },
                 { left: '15vw', top: '76vh' }, { left: '85vw', top: '76vh' },
-                { left: '10vw', top: '35vh' }, { left: '90vw', top: '35vh' }, // Nyelip di pinggir kiri kanan
+                { left: '10vw', top: '35vh' }, { left: '90vw', top: '35vh' }, 
                 { left: '10vw', top: '65vh' }, { left: '90vw', top: '65vh' }
             ];
         } else {
-            // Posisi PC (Lebar)
             photoSlots = [
                 { left: '16vw', top: '26vh' }, { left: '12vw',  top: '50vh' }, { left: '16vw', top: '74vh' },
                 { left: '84vw', top: '26vh' }, { left: '88vw', top: '50vh' }, { left: '84vw', top: '74vh' },
