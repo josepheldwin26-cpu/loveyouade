@@ -4,30 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Surat Spesial Buat Kamu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --bg-color: #1a0508; 
             --bg-glow: #4a0d18;
-            --env-color: #9e1b27; 
-            --env-dark: #7a121d;
-            --env-flap: #c92a39;
+            --env-color: #8c111f; 
+            --env-dark: #660a15;
+            --env-flap: #b31b2a;
         }
 
         body {
-            background: radial-gradient(circle at center, var(--bg-glow), var(--bg-color));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background: radial-gradient(circle at top center, var(--bg-glow), var(--bg-color));
+            background-attachment: fixed;
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; 
+            overflow-x: hidden; 
         }
 
         .bg-heart {
-            position: absolute;
+            position: fixed;
             color: rgba(255, 100, 130, 0.15);
             bottom: -50px;
             animation: floatUp linear infinite;
@@ -43,296 +40,362 @@
             100% { transform: translateY(-110vh) rotate(360deg) scale(1.5); opacity: 0; }
         }
 
-        .container {
+        .hero-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; 
             position: relative;
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 10; 
         }
 
-        .container:not(.open):hover {
-            transform: scale(1.03) translateY(-5px);
+        /* 1. PIRINGAN HITAM (KIRI) - Disesuaikan letaknya */
+        .vinyl-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.2);
+            opacity: 0;
+            z-index: 1; 
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+        .vinyl-wrapper.play {
+            opacity: 1;
+            z-index: 20; 
+            /* Diturunkan dari -370px ke -320px agar seimbang dengan surat */
+            transform: translate(calc(-50% - 380px), calc(-50% - 20px)) scale(0.9); 
+            transition-delay: 0.5s; 
+        }
+
+        .vinyl {
+            width: 220px;
+            height: 220px;
+            background: #111;
+            border-radius: 50%;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6), inset 0 0 15px #000;
+            background-image: repeating-radial-gradient(#111, #111 3px, #2a2a2a 4px, #111 5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: spin 3s linear infinite;
+            animation-play-state: paused; 
+            border: 2px solid #222;
+        }
+
+        .vinyl.spinning { animation-play-state: running; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .vinyl-label {
+            width: 70px;
+            height: 70px;
+            background: var(--env-color);
+            border-radius: 50%;
+            border: 2px solid #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vinyl-hole { width: 10px; height: 10px; background: var(--bg-color); border-radius: 50%; }
+
+        .music-info {
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .vinyl-wrapper.play .music-info { opacity: 1; transition-delay: 1.5s; }
+        .song-title { color: #fff; font-size: 16px; margin: 0 0 10px 0; font-weight: 600; letter-spacing: 1px; }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #fff; padding: 8px 20px; border-radius: 25px;
+            font-family: 'Poppins', sans-serif; font-size: 13px;
+            cursor: pointer; backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .control-btn:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.05); }
+
+        /* 2. ELEMEN KUE MINI (KANAN) - Disesuaikan letaknya */
+        .right-wrapper {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.2);
+            opacity: 0; z-index: 1;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease;
+        }
+
+        .right-wrapper.play {
+            opacity: 1; z-index: 20;
+            /* Diturunkan dari -370px ke -320px agar sejajar lurus */
+            transform: translate(calc(-50% + 380px), calc(-50% - 20px)) scale(1);
+            transition-delay: 0.5s;
+        }
+
+        .mini-cake-card {
+            background: linear-gradient(135deg, #fff5f7, #ffe6eb);
+            padding: 25px 20px; border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 10px rgba(255,255,255,0.8);
+            text-align: center; cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 140px; border: 1px solid #ffccd5;
+        }
+
+        .mini-cake-card:hover { transform: scale(1.08) translateY(-5px); box-shadow: 0 25px 40px rgba(0,0,0,0.6); }
+
+        .right-wrapper.play .mini-cake-card {
+            animation: floatingRight 3s ease-in-out infinite; animation-delay: 1.5s;
+        }
+
+        @keyframes floatingRight {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .mini-cake-icon { font-size: 65px; line-height: 1; margin-bottom: 15px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
+        .mini-cake-card p { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: #b31b2a; margin: 0; line-height: 1.4; }
+
+        /* 3. AMPLOP & SURAT (TENGAH) */
+        .container { position: relative; cursor: pointer; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; }
+        .container:not(.open):hover { transform: scale(1.03) translateY(-5px); }
 
         .envelope {
-            position: relative;
-            width: 320px;
-            height: 220px;
-            background-color: var(--env-color);
-            border-radius: 10px 10px 15px 15px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative; width: 320px; height: 220px; background-color: var(--env-color);
+            border-radius: 10px 10px 15px 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
 
         .flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 160px solid transparent;
-            border-right: 160px solid transparent;
-            border-top: 120px solid var(--env-flap);
-            transform-origin: top;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 4;
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 120px solid var(--env-flap);
+            transform-origin: top; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 4;
         }
 
         .front {
-            position: absolute;
-            bottom: 0;
-            width: 0;
-            height: 0;
-            border-left: 160px solid var(--env-dark);
-            border-right: 160px solid var(--env-dark);
-            border-bottom: 110px solid var(--env-color);
-            border-radius: 0 0 15px 15px;
-            z-index: 3;
-            pointer-events: none;
+            position: absolute; bottom: 0; width: 0; height: 0;
+            border-left: 160px solid var(--env-dark); border-right: 160px solid var(--env-dark); border-bottom: 110px solid var(--env-color);
+            border-radius: 0 0 15px 15px; z-index: 3; pointer-events: none;
         }
 
         .seal {
-            position: absolute;
-            top: 115px;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 25px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 6; 
-            animation: pulseHeart 1.5s infinite;
-            transition: opacity 0.4s ease;
+            position: absolute; top: 115px; left: 50%; transform: translate(-50%, -50%);
+            width: 60px; height: 60px; background: radial-gradient(circle, #e74c3c, #900c19);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 25px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.3);
+            z-index: 6; animation: pulseHeart 1.5s infinite; transition: opacity 0.4s ease; border: 1px solid #ff7373;
         }
 
-        @keyframes pulseHeart {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px rgba(231, 76, 60, 0.4); }
-            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 25px rgba(255, 100, 100, 0.8); }
-        }
-
-        /* Surat Putih Solid dengan penyesuaian ukuran */
         .letter {
-            position: absolute;
-            background: #ffffff; 
-            width: 290px;
-            height: 400px; /* Ditinggikan sedikit biar teksnya muat */
-            top: -10px;
-            left: 15px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-            transition-delay: 0.5s;
-            z-index: 2;
-            padding: 30px 20px;
-            box-sizing: border-box;
-            text-align: center;
-            opacity: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            position: absolute; 
+            background: linear-gradient(145deg, #fffafb, #ffeef1); 
+            width: 290px; height: 410px; 
+            top: -10px; left: 15px; border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255, 204, 213, 0.5);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); transition-delay: 0.5s;
+            z-index: 2; padding: 35px 25px; box-sizing: border-box; text-align: center;
+            opacity: 0; display: flex; flex-direction: column; justify-content: center;
+            border: 1px solid #ffd1dc;
+        }
+
+        .letter::before {
+            content: ''; position: absolute;
+            top: 10px; bottom: 10px; left: 10px; right: 10px;
+            border: 1px dashed #ffb3c1; border-radius: 4px; pointer-events: none;
         }
 
         .letter h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 32px; /* Ukuran font disesuaikan */
-            color: #9e1b27; 
-            margin: 0 0 12px 0;
-            letter-spacing: 1px;
-            line-height: 1.2;
+            font-family: 'Dancing Script', cursive; font-size: 34px; color: #a11326; 
+            margin: 0 0 15px 0; letter-spacing: 1px; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         }
 
         .letter p {
-            font-size: 13px; /* Ukuran font disesuaikan untuk teks panjang */
-            color: #333333; 
-            line-height: 1.6;
-            margin: 0;
-            font-weight: 500;
+            font-size: 12.5px; color: #4a151f; line-height: 1.6; margin: 0;
+            font-weight: 400; text-align: justify; text-align-last: center;
         }
 
         .hint {
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ffcccc;
-            font-size: 14px;
-            opacity: 0.9;
-            letter-spacing: 2px;
-            animation: bounce 2s infinite;
-            text-transform: uppercase;
-            font-weight: 600;
-            width: max-content;
+            position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);
+            color: #ffcccc; font-size: 13px; opacity: 0.9; letter-spacing: 3px;
+            animation: bounce 2s infinite; text-transform: uppercase; font-weight: 500; width: max-content;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-8px); }
-            60% { transform: translateX(-50%) translateY(-4px); }
+        .container.open .flap { transform: rotateX(180deg); z-index: 1; }
+        .container.open .seal { opacity: 0; }
+        
+        /* TINGGI SURAT DITURUNKAN: Dari -140px menjadi -90px agar tidak mentok atas */
+        .container.open .letter { transform: translateY(-90px) scale(1.1); z-index: 5; opacity: 1; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        .container.open .hint { opacity: 0; transition: opacity 0.3s; }
+
+        /* --- SECTION 2: OUR MEMORIES (Dinaikkan mendekati surat) --- */
+        .gallery-section { 
+            padding: 0px 20px 100px 20px; /* Padding atas dinolkan */
+            margin-top: -60px; /* Ditarik ke atas menggunakan margin negatif */
+            max-width: 1200px; 
+            margin-left: auto;
+            margin-right: auto;
+            position: relative; 
+            z-index: 5; 
+            opacity: 0; 
+            transform: translateY(50px); 
+            transition: opacity 1s ease, transform 1s ease; 
+        }
+        .gallery-section.show { opacity: 1; transform: translateY(0); }
+        .gallery-title { font-family: 'Dancing Script', cursive; font-size: 50px; color: #ffcccc; text-align: center; margin-bottom: 50px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .gallery-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 40px; padding: 20px; }
+        .gallery-photo { width: 220px; aspect-ratio: 1 / 1; object-fit: cover; border: 5px solid #fff; border-bottom: 30px solid #fff; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, z-index 0s; position: relative; z-index: 1; }
+        .gallery-photo:nth-child(2n) { transform: rotate(5deg) translateY(15px); }
+        .gallery-photo:nth-child(3n) { transform: rotate(-6deg) translateY(-10px); }
+        .gallery-photo:nth-child(4n) { transform: rotate(7deg) translateX(10px); }
+        .gallery-photo:nth-child(5n) { transform: rotate(-4deg) translateY(-20px); }
+        .gallery-photo:nth-child(7n) { transform: rotate(4deg) translateX(-15px); }
+        .gallery-photo:hover { transform: scale(1.15) rotate(0deg) translate(0) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.8); z-index: 10; }
+
+        /* MODAL POP-UP GALERI */
+        .photo-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .photo-modal.show { opacity: 1; pointer-events: auto; cursor: pointer; }
+        .modal-content { background: #fff; padding: 15px 15px 25px 15px; border-radius: 8px; width: min-content; max-width: 90vw; display: flex; flex-direction: column; align-items: center; transform: scale(0.8) translateY(50px); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); cursor: default; }
+        .photo-modal.show .modal-content { transform: scale(1) translateY(0); }
+        #modalImg { max-height: 60vh; max-width: 85vw; width: auto; height: auto; border-radius: 4px; pointer-events: none; display: block; }
+        #modalText { font-family: 'Dancing Script', cursive; color: #9e1b27; font-size: 28px; line-height: 1.3; margin: 20px 0 0 0; text-align: center; text-shadow: 0 1px 2px rgba(0,0,0,0.1); width: 100%; min-width: 250px; word-wrap: break-word; }
+        .close-hint { position: absolute; top: 20px; right: 30px; color: rgba(255,255,255,0.7); font-size: 16px; letter-spacing: 1px; }
+
+        /* --- KUE REALISTIS & LILIN ANGKA LILIN 3D --- */
+        .blow-cake-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #2e0912, #050102); 
+            z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: background 1.5s ease, opacity 0.5s ease;
         }
 
-        .scatter-photo {
-            position: absolute;
-            width: 120px; 
-            height: 120px;
-            object-fit: cover; 
-            border: 5px solid #fff;
-            border-bottom: 20px solid #fff; 
-            border-radius: 4px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            opacity: 0;
-            transition: opacity 1s, left 1s cubic-bezier(0.2, 0.8, 0.2, 1), top 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s ease, box-shadow 0.4s ease;
-            z-index: 1; 
-            pointer-events: none; 
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+        .blow-cake-overlay.active { opacity: 1; pointer-events: auto; }
+        .blow-cake-overlay.lights-on { background: radial-gradient(circle at center, #6b1226, #1a0508); }
+
+        .big-cake-wrapper {
+            display: flex; flex-direction: column; align-items: center;
+            transform: scale(0.8) translateY(20px); transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
-        .scatter-photo.spread {
-            opacity: 1;
-            pointer-events: auto; 
-            cursor: pointer;
-            transform: translate(-50%, -50%) scale(1) rotate(var(--rot));
+        .blow-cake-overlay.active .big-cake-wrapper { transform: scale(1) translateY(0); }
+
+        /* Wadah Lilin Angka */
+        .candle-container { 
+            display: flex; gap: 40px; z-index: 10; 
+            position: relative; margin-bottom: -15px; 
         }
 
-        .scatter-photo.spread:hover {
-            z-index: 100 !important;
-            transform: translate(-50%, -50%) scale(1.6) rotate(0deg) !important;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            border-bottom: 5px solid #fff; 
+        .candle { position: relative; display: flex; flex-direction: column; align-items: center; }
+
+        /* Lilin Berbentuk Angka Mewah Bergradasi Wax */
+        .candle-number-wax {
+            font-family: 'Poppins', sans-serif; 
+            font-size: 120px; 
+            font-weight: 800; 
+            background: linear-gradient(to bottom, #ffffff 0%, #ff8da7 45%, #c91a3e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 6px 15px rgba(201, 26, 62, 0.7));
+            line-height: 1;
+            margin-top: 15px;
         }
 
-        .container.open .flap {
-            transform: rotateX(180deg);
-            z-index: 1;
+        /* Letak Api Sempurna di Atas Setiap Angka */
+        .flame-glow {
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 80px; background: radial-gradient(circle, rgba(255, 170, 0, 0.4), transparent 70%);
+            animation: pulseGlow 0.5s infinite alternate; pointer-events: none;
+        }
+        @keyframes pulseGlow { 0% { transform: translateX(-50%) scale(1); opacity: 0.8; } 100% { transform: translateX(-50%) scale(1.1); opacity: 1; } }
+
+        .flame {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 38px;
+            background: radial-gradient(ellipse at bottom, #fff 10%, #ffdf00 40%, #ff4d4d 80%, transparent);
+            border-radius: 50% 50% 20% 20%; box-shadow: 0 -5px 15px #ff9d00, 0 0 30px #ff0000;
+            animation: flicker 0.12s infinite alternate; transition: all 0.5s ease;
+        }
+        @keyframes flicker { 0% { transform: translateX(-50%) scale(1) rotate(-1deg); } 100% { transform: translateX(-50%) scale(1.05) rotate(2deg); } }
+
+        .smoke {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; filter: blur(5px);
+            opacity: 0; pointer-events: none;
         }
 
-        .container.open .seal {
-            opacity: 0;
+        .candle.blown .flame, .candle.blown .flame-glow { 
+            opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .candle.blown .smoke { animation: flySmoke 2s ease-out forwards; }
+
+        @keyframes flySmoke {
+            0% { opacity: 0.8; transform: translateX(-50%) translateY(0) scale(1); }
+            50% { opacity: 0.5; transform: translateX(calc(-50% + 20px)) translateY(-50px) scale(3); filter: blur(10px); }
+            100% { opacity: 0; transform: translateX(calc(-50% - 10px)) translateY(-100px) scale(5); filter: blur(15px); }
         }
 
-        .container.open .letter {
-            transform: translateY(-160px) scale(1.1);
-            z-index: 5;
-            opacity: 1;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+        /* KUE REALISTIS MULTI-LAYER */
+        .elegant-cake {
+            position: relative; width: 280px; height: 110px;
+            background: linear-gradient(to right, #9e2a43 0%, #ffccd5 50%, #9e2a43 100%);
+            border-radius: 12px 12px 0 0; 
+            box-shadow: inset 0 8px 12px rgba(255,255,255,0.4), 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+        
+        /* Frosting Krim Meleleh di Atas */
+        .elegant-cake::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 22px;
+            background: #ffffff; border-radius: 12px 12px 20px 20px;
+            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.15));
         }
 
-        .container.open .hint {
-            opacity: 0;
-            transition: opacity 0.3s;
+        /* Kue Tingkat Bawah (Tier 2) */
+        .cake-bottom-tier {
+            width: 340px; height: 80px;
+            background: linear-gradient(to right, #7a162a 0%, #ffa3b6 50%, #7a162a 100%);
+            border-radius: 12px 12px 0 0; margin-top: -10px;
+            box-shadow: inset 0 5px 10px rgba(255,255,255,0.3), 0 15px 30px rgba(0,0,0,0.6);
+            z-index: 3; position: relative;
+        }
+        .cake-bottom-tier::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 18px;
+            background: #fff0f3; border-radius: 12px 12px 15px 15px;
         }
 
-        /* --- MODAL YANG SUDAH DIPERBAIKI --- */
-        .photo-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
+        /* Piring Tatakan Kue */
+        .cake-plate {
+            width: 400px; height: 20px;
+            background: linear-gradient(to bottom, #f0f0f0, #999999);
+            border-radius: 50% / 10px; margin-top: -5px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            z-index: 4; position: relative;
         }
 
-        .photo-modal.show {
-            opacity: 1;
-            pointer-events: auto;
-            cursor: pointer;
+        .happy-20-text {
+            font-family: 'Dancing Script', cursive; font-size: 70px; color: #ffcccc; margin-top: 50px;
+            opacity: 0; transform: translateY(20px) scale(0.9); transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 0 15px rgba(255, 126, 179, 0.6), 0 0 30px rgba(255, 126, 179, 0.3); text-align: center; line-height: 1.1;
         }
+        .happy-20-text.show { opacity: 1; transform: translateY(0) scale(1); }
 
-        .modal-content {
-            background: #fff;
-            padding: 15px 15px 25px 15px;
-            border-radius: 8px;
-            width: min-content; 
-            max-width: 90vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transform: scale(0.8) translateY(50px);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            cursor: default;
-        }
-
-        .photo-modal.show .modal-content {
-            transform: scale(1) translateY(0);
-        }
-
-        #modalImg {
-            max-height: 55vh; 
-            max-width: 85vw; 
-            width: auto; 
-            height: auto;
-            border-radius: 4px;
-            pointer-events: none; 
-            display: block;
-        }
-
-        #modalText {
-            font-family: 'Dancing Script', cursive;
-            color: #9e1b27;
-            font-size: 28px;
-            line-height: 1.3;
-            margin: 20px 0 0 0;
-            text-align: center;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            width: 100%; 
-            min-width: 250px; 
-            word-wrap: break-word;
-        }
-
-        .close-hint {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: rgba(255,255,255,0.7);
-            font-size: 16px;
-            letter-spacing: 1px;
-        }
-
-        /* --- RESPONSIVE UNTUK HP & TABLET --- */
+        /* --- RESPONSIVE UNTUK HP --- */
         @media (max-width: 768px) {
-            .container {
-                transform: scale(0.8); 
-            }
-            .container:not(.open):hover {
-                transform: scale(0.83) translateY(-5px);
-            }
-            .scatter-photo {
-                width: 75px; 
-                height: 75px;
-                border-width: 3px;
-                border-bottom-width: 12px;
-            }
-            .scatter-photo.spread:hover {
-                transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
-            }
-            .container.open .letter {
-                transform: translateY(-130px) scale(1.05); 
-            }
-            #modalText {
-                font-size: 24px;
-                margin-top: 15px;
-            }
-            .close-hint {
-                font-size: 12px;
-                top: 15px;
-                right: 15px;
-            }
+            .container { transform: scale(0.85); }
+            .container:not(.open):hover { transform: scale(0.88) translateY(-5px); }
+            /* Penyesuaian meluncur di HP biar aman */
+            .vinyl-wrapper.play { transform: translate(calc(-50% - 130px), calc(-50% - 190px)) scale(0.65); }
+            .right-wrapper.play { transform: translate(calc(-50% + 130px), calc(-50% - 190px)) scale(0.85); }
+            .gallery-section { margin-top: -20px; }
+            .gallery-container { gap: 20px; }
+            .gallery-photo { width: 140px; border-bottom: 20px solid #fff; }
+            #modalText { font-size: 24px; margin-top: 15px; }
+            .happy-20-text { font-size: 45px; }
+            .big-cake-wrapper { transform: scale(0.65); }
+            .blow-cake-overlay.active .big-cake-wrapper { transform: scale(0.75); }
         }
     </style>
 </head>
@@ -340,37 +403,64 @@
 
     <audio id="bgMusic" src="if_i_had_a_gun.mp3" preload="auto"></audio>
 
-    <div class="container" id="mailContainer">
-        <div class="envelope">
-            <div class="flap"></div>
-            <div class="front"></div>
-            <div class="seal">❤️</div>
-            
-            <div class="letter">
-                <!-- Teks utama yang sudah diperbaiki tanda bacanya -->
-                <h1>Happy Birthday, Sayang ❤️</h1>
-                <p>Cieeee, ada yang sudah umur 20 niii. Semoga semakin dewasa, semakin jadi orang baik, dan bikin bangga orang tua. Nanti ke depannya pasti makin banyak tantangan, tapi sa yakinnn ade bisaaaa, karena sa tau ade itu cewek kuat. Saya bangga jadi ade punya pacar. Selamat merayakan ini hari spesial adeee! Maaf belum bisa kasi surprise langsung untuk ade, tapi nanti nyusul. Selamat ulang tahun sayang, love you so muchhhhhhh ❤️❤️❤️</p>
-                <p style="margin-top: 15px; font-weight: 600; font-style: italic; font-size: 14px;">- Your handsome boyfriend</p>
+    <div class="hero-section">
+        
+        <!-- Piringan Hitam (KIRI) -->
+        <div class="vinyl-wrapper" id="vinylWrapper">
+            <div class="vinyl" id="vinylDisc">
+                <div class="vinyl-label"><div class="vinyl-hole"></div></div>
+            </div>
+            <div class="music-info">
+                <p class="song-title">If I Had A Gun</p>
+                <button class="control-btn" id="playPauseBtn">⏸ Pause</button>
             </div>
         </div>
-        <div class="hint">Tap untuk membuka</div>
+
+        <!-- Elemen Kue Mini (KANAN) -->
+        <div class="right-wrapper" id="rightWrapper">
+            <div class="mini-cake-card" id="cakeBtn">
+                <div class="mini-cake-icon">🎂</div>
+                <p>Press to blow<br>the cake ✨</p>
+            </div>
+        </div>
+
+        <!-- Amplop & Surat Romantis (TENGAH) -->
+        <div class="container" id="mailContainer">
+            <div class="envelope">
+                <div class="flap"></div>
+                <div class="front"></div>
+                <div class="seal">❤️</div>
+                
+                <div class="letter">
+                    <h1>Happy Birthday, Sayang ❤️</h1>
+                    <p>Cieeee, ada yang sudah umur 20 niii. Semoga semakin dewasa, semakin jadi orang baik, dan bikin bangga orang tua. Nanti ke depannya pasti makin banyak tantangan, tapi sa yakinnn ade bisaaaa, karena sa tau ade itu cewek kuat. Saya bangga jadi ade punya pacar. Selamat merayakan ini hari spesial adeee! Maaf belum bisa kasi surprise langsung untuk ade, tapi nanti nyusul. Selamat ulang tahun sayang, love you so muchhhhhhh ❤️❤️❤️</p>
+                    <p style="margin-top: 15px; font-weight: 600; font-style: italic; font-size: 13px; text-align: center;">- Your handsome boyfriend -</p>
+                </div>
+            </div>
+            <div class="hint">Tap untuk membuka</div>
+        </div>
     </div>
 
-    <!-- 14 Foto -->
-    <img src="foto1.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto2.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto3.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto4.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto5.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto6.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto7.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto8.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto9.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto10.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto11.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto12.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto13.jpg" class="scatter-photo" alt="Foto">
-    <img src="foto14.jpg" class="scatter-photo" alt="Foto">
+    <!-- Galeri Tersebar Acak -->
+    <div class="gallery-section" id="gallerySection">
+        <h2 class="gallery-title">Our Memories</h2>
+        <div class="gallery-container">
+            <img src="foto1.jpg" class="gallery-photo" alt="Kenangan 1">
+            <img src="foto2.jpg" class="gallery-photo" alt="Kenangan 2">
+            <img src="foto3.jpg" class="gallery-photo" alt="Kenangan 3">
+            <img src="foto4.jpg" class="gallery-photo" alt="Kenangan 4">
+            <img src="foto5.jpg" class="gallery-photo" alt="Kenangan 5">
+            <img src="foto6.jpg" class="gallery-photo" alt="Kenangan 6">
+            <img src="foto7.jpg" class="gallery-photo" alt="Kenangan 7">
+            <img src="foto8.jpg" class="gallery-photo" alt="Kenangan 8">
+            <img src="foto9.jpg" class="gallery-photo" alt="Kenangan 9">
+            <img src="foto10.jpg" class="gallery-photo" alt="Kenangan 10">
+            <img src="foto11.jpg" class="gallery-photo" alt="Kenangan 11">
+            <img src="foto12.jpg" class="gallery-photo" alt="Kenangan 12">
+            <img src="foto13.jpg" class="gallery-photo" alt="Kenangan 13">
+            <img src="foto14.jpg" class="gallery-photo" alt="Kenangan 14">
+        </div>
+    </div>
 
     <div class="photo-modal" id="photoModal">
         <div class="close-hint">Ketuk di mana saja untuk menutup ✖</div>
@@ -380,7 +470,35 @@
         </div>
     </div>
 
+    <!-- OVERLAY TIUP LILIN ANGKA 20 & KUE TINGKAT REALISTIS -->
+    <div class="blow-cake-overlay" id="blowCakeOverlay">
+        <div class="big-cake-wrapper">
+            <div class="candle-container">
+                <!-- Lilin Angka 2 -->
+                <div class="candle">
+                    <div class="flame-glow"></div>
+                    <div class="flame"></div>
+                    <div class="smoke"></div>
+                    <div class="candle-number-wax">2</div>
+                </div>
+                <!-- Lilin Angka 0 -->
+                <div class="candle">
+                    <div class="flame-glow"></div>
+                    <div class="flame"></div>
+                    <div class="smoke"></div>
+                    <div class="candle-number-wax">0</div>
+                </div>
+            </div>
+            <!-- Struktur Kue Realistis Berlapis -->
+            <div class="elegant-cake"></div>
+            <div class="cake-bottom-tier"></div>
+            <div class="cake-plate"></div>
+        </div>
+        <h1 class="happy-20-text" id="happy20Text">Happy 20th Birthday!<br><span style="font-size: 40px; color: #fff;">Sayang ❤️</span></h1>
+    </div>
+
     <script>
+        // Efek hujan hati
         function createHeart() {
             const heart = document.createElement('div');
             heart.innerHTML = '❤️';
@@ -394,8 +512,18 @@
         setInterval(createHeart, 300);
 
         const container = document.getElementById('mailContainer');
+        const vinylWrapper = document.getElementById('vinylWrapper');
+        const rightWrapper = document.getElementById('rightWrapper');
+        const vinylDisc = document.getElementById('vinylDisc');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const cakeBtn = document.getElementById('cakeBtn');
+        const blowCakeOverlay = document.getElementById('blowCakeOverlay');
+        const candles = document.querySelectorAll('.candle');
+        const happy20Text = document.getElementById('happy20Text');
+        const gallery = document.getElementById('gallerySection');
         const music = document.getElementById('bgMusic');
-        const photos = document.querySelectorAll('.scatter-photo');
+        const photos = document.querySelectorAll('.gallery-photo');
+        
         let isOpen = false;
 
         const modal = document.getElementById('photoModal');
@@ -419,80 +547,101 @@
             "I love you, lebih dari kata-kata yang bisa aku ucapin."
         ];
 
-        const isMobile = window.innerWidth <= 768;
-        let photoSlots = [];
-
-        if (isMobile) {
-            photoSlots = [
-                { left: '20vw', top: '12vh' }, { left: '50vw', top: '8vh' }, { left: '80vw', top: '12vh' },
-                { left: '15vw', top: '24vh' }, { left: '85vw', top: '24vh' },
-                { left: '20vw', top: '88vh' }, { left: '50vw', top: '92vh' }, { left: '80vw', top: '88vh' },
-                { left: '15vw', top: '76vh' }, { left: '85vw', top: '76vh' },
-                { left: '10vw', top: '35vh' }, { left: '90vw', top: '35vh' }, 
-                { left: '10vw', top: '65vh' }, { left: '90vw', top: '65vh' }
-            ];
-        } else {
-            photoSlots = [
-                { left: '16vw', top: '26vh' }, { left: '12vw',  top: '50vh' }, { left: '16vw', top: '74vh' },
-                { left: '84vw', top: '26vh' }, { left: '88vw', top: '50vh' }, { left: '84vw', top: '74vh' },
-                { left: '28vw', top: '22vh' }, { left: '38vw', top: '18vh' }, { left: '62vw', top: '18vh' }, { left: '72vw', top: '22vh' },
-                { left: '28vw', top: '78vh' }, { left: '38vw', top: '82vh' }, { left: '62vw', top: '82vh' }, { left: '72vw', top: '78vh' }
-            ];
-        }
-
         container.addEventListener('click', () => {
             if (!isOpen) {
                 container.classList.add('open');
+                vinylWrapper.classList.add('play'); 
+                rightWrapper.classList.add('play'); 
+                vinylDisc.classList.add('spinning'); 
+                gallery.classList.add('show'); 
                 isOpen = true;
                 
                 music.play().then(() => {
                     music.currentTime = 78; 
                 }).catch(error => {
                     console.log("Audio Error: ", error);
-                    document.body.addEventListener('click', () => {
-                        music.play();
-                        music.currentTime = 78;
-                    }, { once: true });
+                    playPauseBtn.innerHTML = '▶️ Play';
+                    vinylDisc.classList.remove('spinning');
                 });
                 
                 setTimeout(() => {
                     confetti({
-                        particleCount: 200,
-                        spread: 90,
-                        origin: { y: 0.6 },
-                        colors: ['#ff4d4d', '#ff7eb3', '#ffffff', '#c0392b'],
-                        shapes: ['circle', 'square'] 
+                        particleCount: 150, spread: 100, origin: { y: 0.6 },
+                        colors: ['#a11326', '#ff7eb3', '#ffcccc', '#e74c3c'], shapes: ['circle']
                     });
                 }, 900);
-
-                photos.forEach((photo, index) => {
-                    if(index < photoSlots.length) {
-                        const slot = photoSlots[index];
-                        const randomRotate = (Math.random() - 0.5) * 40;
-
-                        setTimeout(() => {
-                            photo.style.left = slot.left;
-                            photo.style.top = slot.top;
-                            photo.style.setProperty('--rot', `${randomRotate}deg`);
-                            photo.classList.add('spread');
-                        }, 200 + (index * 90)); 
-                    }
-
-                    photo.addEventListener('click', (e) => {
-                        e.stopPropagation(); 
-                        if (photo.classList.contains('spread')) {
-                            modalImg.src = photo.src;
-                            modalText.innerText = pesanRomantis[index];
-                            modal.classList.add('show');
-                        }
-                    });
-                });
             }
         });
 
-        modal.addEventListener('click', () => {
-            modal.classList.remove('show');
+        // Animasi Tiup Lilin 20th
+        cakeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            blowCakeOverlay.classList.add('active'); 
+            
+            setTimeout(() => {
+                candles.forEach(candle => candle.classList.add('blown'));
+                
+                setTimeout(() => {
+                    blowCakeOverlay.classList.add('lights-on'); 
+                    happy20Text.classList.add('show'); 
+                    
+                    var duration = 3000;
+                    var animationEnd = Date.now() + duration;
+                    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10001, colors: ['#b31b2a', '#ffcccc', '#ffffff'] };
+
+                    var interval = setInterval(function() {
+                        var timeLeft = animationEnd - Date.now();
+                        if (timeLeft <= 0) { return clearInterval(interval); }
+                        var particleCount = 50 * (timeLeft / duration);
+                        confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+                    }, 250);
+                    
+                    setTimeout(() => {
+                        blowCakeOverlay.classList.remove('active');
+                        blowCakeOverlay.classList.remove('lights-on');
+                        
+                        setTimeout(() => {
+                            candles.forEach(candle => candle.classList.remove('blown'));
+                            happy20Text.classList.remove('show');
+                        }, 1000);
+                        
+                    }, 6000); 
+                    
+                }, 1200); 
+                
+            }, 2500); 
         });
+
+        // Kontrol Audio Musik
+        playPauseBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            if (music.paused) {
+                music.play();
+                vinylDisc.classList.add('spinning');
+                playPauseBtn.innerHTML = '⏸ Pause';
+            } else {
+                music.pause();
+                vinylDisc.classList.remove('spinning');
+                playPauseBtn.innerHTML = '▶️ Play';
+            }
+        });
+
+        vinylDisc.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playPauseBtn.click(); 
+        });
+
+        // Modal Klik Foto Galeri
+        photos.forEach((photo, index) => {
+            photo.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                modalImg.src = photo.src;
+                modalText.innerText = pesanRomantis[index];
+                modal.classList.add('show');
+            });
+        });
+
+        modal.addEventListener('click', () => { modal.classList.remove('show'); });
     </script>
 </body>
 </html>
